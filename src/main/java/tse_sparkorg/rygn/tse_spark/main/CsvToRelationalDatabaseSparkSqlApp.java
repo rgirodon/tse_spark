@@ -82,6 +82,8 @@ public class CsvToRelationalDatabaseSparkSqlApp {
         .jdbc(dbConnectionUrl, "ch03", prop);
 	*/
     
+    spark.stop();
+    
     System.out.println("Process complete");
     
   }

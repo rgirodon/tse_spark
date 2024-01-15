@@ -64,6 +64,8 @@ public class CsvJoinApp {
 		.option("header",true)
 		.csv("data/output/uk_authors");
     
+    spark.stop();
+    
     System.out.println("Process complete");
   }
 }
