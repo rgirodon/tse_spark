@@ -1,4 +1,4 @@
-package tse_sparkorg.rygn.tse_spark.main;
+package org.rygn.tse_spark.main;
 
 import static org.apache.spark.sql.functions.concat;
 import static org.apache.spark.sql.functions.lit;
@@ -15,103 +15,68 @@ import org.apache.spark.sql.SparkSession;
  */
 public class CsvToRelationalDatabaseApp {
 
-  /**
-   * main() is your entry point to the application.
-   * 
-   * @param args
-   */
-  public static void main(String[] args) {
-    CsvToRelationalDatabaseApp app = new CsvToRelationalDatabaseApp();
-    app.start();
-  }
+	/**
+	 * main() is your entry point to the application.
+	 * 
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		
+		// Creates a session on a local master
+		SparkSession spark = SparkSession.builder().appName("CSV to DB").master("local").getOrCreate();
 
-  /**
-   * The processing code.
-   */
-  private void start() {
-			  
-    // Creates a session on a local master 
-    SparkSession spark = SparkSession.builder()
-        .appName("CSV to DB")
-        .master("local")
-        .getOrCreate();
-    
-	  
-	/*  
-	// Creates a session on a yarn master
-	SparkSession spark = SparkSession.builder()
-        .appName("CSV to DB")
-        .getOrCreate();
-	*/
+		/*
+		 * // Creates a session on a yarn master SparkSession spark =
+		 * SparkSession.builder() .appName("CSV to DB") .getOrCreate();
+		 */
 
-    // Step 1: Ingestion
-    // ---------
-   
-    
-    // Reads a local CSV file with header, called data/authors.csv, stores it in a
-    // dataframe    
-    Dataset<Row> df = spark.read()
-        .format("csv")
-        .option("header", "true")
-        .load("data/authors.csv");
-    
-    
-    /*
-    // Reads a hdfs CSV file with header, called /tmp/data/authors.csv, stores it in a
-    // dataframe
-    Dataset<Row> df = spark.read()
-        .format("csv")
-        .option("header", "true")
-        .load("/tmp/data/authors.csv");
-	*/
+		// Step 1: Ingestion
+		// ---------
 
-    // Step 2: Transform
-    // ---------
+		// Reads a local CSV file with header, called data/authors.csv, stores it in a
+		// dataframe
+		Dataset<Row> df = spark.read().format("csv").option("header", "true").load("data/authors.csv");
 
-    // Creates a new column called "name" as the concatenation of lname, a
-    // virtual column containing " " and the fname column
-    df = df.withColumn(
-			        "full_name",
-			        concat(df.col("fname"), 
-			        		lit(" "), 
-			        		upper(df.col("lname"))));
+		/*
+		 * // Reads a hdfs CSV file with header, called /tmp/data/authors.csv, stores it
+		 * in a // dataframe Dataset<Row> df = spark.read() .format("csv")
+		 * .option("header", "true") .load("/tmp/data/authors.csv");
+		 */
 
-    df.show();
-        
-    df.write()
-    	.option("header",true)
-    	.csv("data/output/authors");
-    
-    /*
-    df.write()
-		.option("header",true)
-		.csv("/tmp/data/output/authors");
-    */
-    
-    /*
-    // Step 3: Save
-    // ----
+		// Step 2: Transform
+		// ---------
 
-    // The connection URL, assuming your PostgreSQL instance runs locally on
-    // the)
-    // default port, and the database we use is "spark_labs"
-    String dbConnectionUrl = "jdbc:postgresql://localhost/spark_labs";
+		// Creates a new column called "name" as the concatenation of lname, a
+		// virtual column containing " " and the fname column
+		df = df.withColumn("full_name", concat(df.col("fname"), lit(" "), upper(df.col("lname"))));
 
-    // Properties to connect to the database, the JDBC driver is part of our
-    // pom.xml
-    Properties prop = new Properties();
-    prop.setProperty("driver", "org.postgresql.Driver");
-    prop.setProperty("user", "postgres");
-    prop.setProperty("password", "RafaelYanice10");
+		df.show();
 
-    // Write in a table called ch02
-    df.write()
-        .mode(SaveMode.Overwrite)
-        .jdbc(dbConnectionUrl, "ch02", prop);
-    */
-    
-    spark.stop();
-    
-    System.out.println("Process complete");    
-  }
+		df.write().option("header", true).csv("data/output/authors");
+
+		/*
+		 * df.write() .option("header",true) .csv("/tmp/data/output/authors");
+		 */
+
+		/*
+		 * // Step 3: Save // ----
+		 * 
+		 * // The connection URL, assuming your PostgreSQL instance runs locally on //
+		 * the) // default port, and the database we use is "spark_labs" String
+		 * dbConnectionUrl = "jdbc:postgresql://localhost/spark_labs";
+		 * 
+		 * // Properties to connect to the database, the JDBC driver is part of our //
+		 * pom.xml Properties prop = new Properties(); prop.setProperty("driver",
+		 * "org.postgresql.Driver"); prop.setProperty("user", "postgres");
+		 * prop.setProperty("password", "RafaelYanice10");
+		 * 
+		 * // Write in a table called ch02 df.write() .mode(SaveMode.Overwrite)
+		 * .jdbc(dbConnectionUrl, "ch02", prop);
+		 */
+
+		spark.stop();
+
+		System.out.println("Process complete");
+	}
+
 }

@@ -1,4 +1,4 @@
-package tse_sparkorg.rygn.tse_spark.main;
+package org.rygn.tse_spark.main;
 
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.SparkSession;
