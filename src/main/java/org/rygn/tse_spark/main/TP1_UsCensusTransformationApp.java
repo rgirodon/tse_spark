@@ -76,7 +76,7 @@ public class TP1_UsCensusTransformationApp {
     intermediateDf = intermediateDf
     					.withColumn("state", intermediateDf.col("splittedLabel").getItem(1));
     
-    // create column county as 2nd part of column countyState (tip : column getItem method)
+    // create column county as 1st part of column countyState (tip : column getItem method)
     intermediateDf = intermediateDf
 						.withColumn("county", intermediateDf.col("splittedLabel").getItem(0));
     
