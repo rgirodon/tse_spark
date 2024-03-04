@@ -1,6 +1,7 @@
 package org.rygn.tse_spark.main;
 
 import static org.apache.spark.sql.functions.split;
+import static org.apache.spark.sql.functions.desc;
 import static org.apache.spark.sql.functions.size;
 import static org.apache.spark.sql.functions.element_at;
 
@@ -157,6 +158,10 @@ public class Tp3_HigherEdInstitutionPerCountyApp {
 	    System.out.println("The combined list has " + institPerCountyDf.count()
 	        + " elements.");
 	    
+	    institPerCountyDf = institPerCountyDf.groupBy(institPerCountyDf.col("county")).count();
 	    
+	    institPerCountyDf = institPerCountyDf.orderBy(desc("count"));
+	    
+	    institPerCountyDf.show();
 	  }
 }

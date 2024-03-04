@@ -202,9 +202,9 @@ public class Tp2_PopulationByCountryApp {
             spark.sql(
                 "SELECT * FROM geodata "
                     + "WHERE geo IS NOT NULL "
-                    + "  AND evolution <= 0 "
+                    + "  AND evolution > 0 "
                     //+ "  AND geo NOT IN ('Asia', 'Africa', 'World', 'North America', 'Asia & Oceania', 'Central & South America', 'Middle East')"
-                    + "ORDER BY evolution asc");
+                    + "ORDER BY evolution desc");
 
     // Shows 5 first rows
     positiveEvolutionDf.show(5);    
