@@ -3,16 +3,24 @@ package org.rygn.tse_spark.main;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.SparkSession;
 
-public class SimpleApp {
+public class CountFirstNames {
 
 	public static void main(String[] args) {
 		
+		/*
 		String logFile = "data/firstnames.txt";
-		
+				
 		SparkSession spark = SparkSession.builder()
 											.appName("Simple Application")
 											.master("local")
 											.getOrCreate();
+		*/
+		
+		String logFile = "/opt/bitnami/spark/data_files";
+		
+		SparkSession spark = SparkSession.builder()
+				.appName("Simple Application")
+				.getOrCreate();
 		
 		Dataset<String> logData = spark.read().textFile(logFile).cache();
 

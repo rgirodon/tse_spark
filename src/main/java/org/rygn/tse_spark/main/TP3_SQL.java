@@ -6,6 +6,11 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
+/**
+ * Transforming records.
+ *
+ * @author rygn
+ */
 public class TP3_SQL {
 
     /**
@@ -14,9 +19,7 @@ public class TP3_SQL {
      * @param args
      */
     public static void main(String[] args) {
-
         TP3_SQL app = new TP3_SQL();
-
         app.start();
     }
 
@@ -25,44 +28,34 @@ public class TP3_SQL {
      */
     private void start() {
         // Creation of the session
-        SparkSession spark = SparkSession
-                .builder()
-                .appName("TP3_macle")
+        SparkSession spark = SparkSession.builder()
+                .appName("Record transformations")
                 .master("local")
                 .getOrCreate();
 
-        Dataset<Row> censusDf = spark
+        // Ingestion of the census data
+        Dataset<Row> intermediateDf = spark
                 .read()
                 .format("csv")
                 .option("header", "true")
                 .option("inferSchema", "true")
-                .option("encoding", "cp1252")
                 .load("data/census/PEP_2017_PEPANNRES.csv");
 
-        Dataset<Row> higherEdDf = spark
-                .read()
-                .format("csv")
-                .option("header", "true")
-                .option("inferSchema", "true")
-                .load("data/dapip/InstitutionCampus.csv");
+        Dataset<Row> finaldf = null;
 
-        Dataset<Row> countyZipDf = spark
-                .read()
-                .format("csv")
-                .option("header", "true")
-                .option("inferSchema", "true")
-                .load("data/hud/COUNTY_ZIP_092018.csv");
+        // Renaming and dropping the columns we do not need
+        intermediateDf.createOrReplaceTempView("PEP_2017_VIEW");
 
-        Dataset<Row> join = null;
+        intermediateDf = spark.sql("SELECT substring(`GEO.id2`,1,2) as stateid, substring(`GEO.id2`,3,5) as countyid, split(`GEO.display-label`, ',')[0] as state, split(`GEO.display-label`, ',')[1] as county, rescen42010 as real2010 ,respop72010 as est2010, respop72017 as est2017 " + "FROM PEP_2017_VIEW "
+                + "ORDER BY stateid, countyid");
 
-        censusDf.createOrReplaceTempView("censusDf");
-        higherEdDf.createOrReplaceTempView("higherEdDf");
-        countyZipDf.createOrReplaceTempView("countyZipDf");
-        join = spark.sql("Select countyZipDf.`zip` ,higherEdDf.`LocationName`, countyZipDf.`county`, censusDf.`respop72017` " +
-                "FROM censusDf " +
-                "join countyZipDf on censusDf.`Geo.id2` = countyZipDf.county " +
-                "join higherEdDf on countyZipDf.zip = SUBSTRING_INDEX(higherEdDf.address, ' ', -1) " +
-                " order by countyZipDf.`zip` asc");
-        join.show();
+        intermediateDf.show();
+
+        intermediateDf.createOrReplaceTempView("FINAL_VIEW");
+
+        finaldf = spark.sql("SELECT *, est2010 - real2010 as diff, est2017 - est2010 as growth " + "FROM FINAL_VIEW ");
+
+        finaldf.show();
+
     }
 }

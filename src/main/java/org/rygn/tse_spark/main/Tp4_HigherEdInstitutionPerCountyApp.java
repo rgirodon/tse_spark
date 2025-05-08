@@ -9,7 +9,7 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
-public class Tp3_HigherEdInstitutionPerCountyApp {
+public class Tp4_HigherEdInstitutionPerCountyApp {
 
 	/**
 	   * main() is your entry point to the application.
@@ -18,7 +18,7 @@ public class Tp3_HigherEdInstitutionPerCountyApp {
 	   */
 	  public static void main(String[] args) {
 		  
-		  Tp3_HigherEdInstitutionPerCountyApp app = new Tp3_HigherEdInstitutionPerCountyApp();
+		  Tp4_HigherEdInstitutionPerCountyApp app = new Tp4_HigherEdInstitutionPerCountyApp();
 	    
 		  app.start();
 	  }

@@ -12,7 +12,7 @@ import org.apache.spark.sql.SparkSession;
  * 
  * @author rygn
  */
-public class TP1_UsCensusTransformationApp {
+public class TP3_UsCensusTransformationApp {
 
   /**
    * main() is your entry point to the application.
@@ -20,7 +20,7 @@ public class TP1_UsCensusTransformationApp {
    * @param args
    */
   public static void main(String[] args) {
-    TP1_UsCensusTransformationApp app = new TP1_UsCensusTransformationApp();
+    TP3_UsCensusTransformationApp app = new TP3_UsCensusTransformationApp();
     app.start();
   }
 
