@@ -16,7 +16,7 @@ import static org.apache.spark.sql.functions.expr;
  * 
  * @author jgp
  */
-public class Tp2_PopulationByCountryApp {
+public class TP2_PopulationByCountryApp {
 
   /**
    * main() is your entry point to the application.
@@ -24,7 +24,7 @@ public class Tp2_PopulationByCountryApp {
    * @param args
    */
   public static void main(String[] args) {
-    Tp2_PopulationByCountryApp app = new Tp2_PopulationByCountryApp();
+    TP2_PopulationByCountryApp app = new TP2_PopulationByCountryApp();
     app.start();
   }
 
